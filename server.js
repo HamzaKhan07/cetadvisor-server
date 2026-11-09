@@ -36,6 +36,9 @@ app.use('/prevCutoffs',prevcutoffRoutes);
 // connections
 connectDB();
 
+// IMPORTANT: Export the app module for Vercel
+module.exports = app; 
+
 app.listen(8000, function(){
     console.log("Server is listening to 8000 port");
 })
