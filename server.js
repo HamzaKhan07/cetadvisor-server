@@ -9,12 +9,6 @@ const prevcutoffRoutes = require('./routes/prevcutoffRoutes');
 //usages
 app = express()
 
-// app.use(cors({
-//     origin: true,
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
-// }));
-
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
     .split(',')
     .map(origin => origin.trim())
