@@ -13,7 +13,7 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
     .split(',')
     .map(origin => origin.trim())
     .filter(Boolean);
-    
+
 app.use(cors({
     origin: function (origin, callback) {
         if (origin && allowedOrigins.includes(origin)) {
@@ -28,7 +28,6 @@ app.use(cors({
 
 app.use(express.json())
 
-console.log("Before connectDB()");
 // connections
 app.use(async (req, res, next) => {
     try {
@@ -42,7 +41,6 @@ app.use(async (req, res, next) => {
         });
     }
 });
-console.log("After connectDB()");
 
 // single home route using /
 app.use('/',cutoffRoutes);
