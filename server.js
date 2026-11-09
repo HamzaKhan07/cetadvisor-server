@@ -33,8 +33,12 @@ app.use('/',cutoffRoutes);
 // prevcutoff routes
 app.use('/prevCutoffs',prevcutoffRoutes);
 
+console.log("Before connectDB()");
+
 // connections
 connectDB();
+
+console.log("After connectDB()");
 
 // IMPORTANT: Export the app module for Vercel
 module.exports = app; 
