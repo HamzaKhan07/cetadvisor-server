@@ -13,7 +13,7 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
     .split(',')
     .map(origin => origin.trim())
     .filter(Boolean);
-
+    
 app.use(cors({
     origin: function (origin, callback) {
         if (origin && allowedOrigins.includes(origin)) {
@@ -28,22 +28,31 @@ app.use(cors({
 
 app.use(express.json())
 
+console.log("Before connectDB()");
+// connections
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('MongoDB error:', error.message);
+        res.status(503).json({
+            success: false,
+            message: 'Database connection failed'
+        });
+    }
+});
+console.log("After connectDB()");
+
 // single home route using /
 app.use('/',cutoffRoutes);
 // prevcutoff routes
 app.use('/prevCutoffs',prevcutoffRoutes);
 
-console.log("Before connectDB()");
-
-// connections
-connectDB();
-
-console.log("After connectDB()");
-
 // IMPORTANT: Export the app module for Vercel
 module.exports = app; 
 
-app.listen(8000, function(){
-    console.log("Server is listening to 8000 port");
-})
+// app.listen(8000, function(){
+//     console.log("Server is listening to 8000 port");
+// })
 

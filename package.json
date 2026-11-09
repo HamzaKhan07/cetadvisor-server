@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "start": "node server",
-    "dev": "node --watch server"
+    "start": "node local.js",
+    "dev": "node --watch local.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

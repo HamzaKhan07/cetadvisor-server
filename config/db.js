@@ -1,23 +1,42 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-async function connectDB(){
-    try{
+let cached = global.mongoose;
+
+if (!cached) {
+    cached = global.mongoose = {
+        conn: null,
+        promise: null
+    };
+}
+
+async function connectDB() {
+    if (cached.conn) {
+        return cached.conn;
+    }
+
+    if (!cached.promise) {
         const uri = process.env.MONGO_URI;
-        console.log("Mongo URI: ", uri);
 
         if (!uri) {
             throw new Error('MONGO_URI is not configured');
         }
 
-        console.log("Before connecting to mongoDB");
-        // connections
-        await mongoose.connect(uri);
-        console.log("After connecting to mongoDB");
+        cached.promise = mongoose.connect(uri, {
+            serverSelectionTimeoutMS: 10000
+        });
+    }
 
-        console.log("MongoDB connected!");
-    }catch(e){
-        console.log("Error in connectDB(): ", e);
+    try {
+        cached.conn = await cached.promise;
+        console.log("MongoDB connected successfully!");
+
+        return cached.conn;
+
+    } catch (error) {
+        cached.promise = null;
+        console.error("MongoDB connection failed:", error.message);
+        throw error;
     }
 }
 
